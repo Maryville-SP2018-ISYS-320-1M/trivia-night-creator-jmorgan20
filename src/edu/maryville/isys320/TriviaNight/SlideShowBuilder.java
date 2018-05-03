@@ -46,11 +46,22 @@ public class SlideShowBuilder {
 	public void buildSlideShow(String[] categories, String[] questions, String[] answers, String fileName) {
 		XMLSlideShow ppt = new XMLSlideShow();
 		XSLFSlideMaster defaultMaster = ppt.getSlideMasters().get(0);
-		
 		for (int i = 0; i < 10; i++) {
-			makeRoundSlide(ppt, defaultMaster, "Round " + (i+1));
-			for (int j = 0; j < 10; j++) {
-				makeSlide(ppt, defaultMaster, categories[i], questions[i * 10 + j], answers[i * 10 + j]);
+			categories[i] = categories[i].substring(3, categories[i].length() - ".txt".length());
+		}
+		for (int round = 0; round < 10; round++) {
+			
+			makeRoundSlide(ppt, defaultMaster, "Round " + (round+1));
+			
+			for (int question = 0; question < 10; question++) {
+				makeQuestion(ppt, defaultMaster, categories[round], questions[round * 10 + question], answers[round * 10 + question]);	
+			}
+			
+			makeRoundSlide(ppt, defaultMaster, "Round " + (round+1) + " Answers " );
+			
+			for (int question = 0; question < 10; question++) {
+				makeQuestion(ppt, defaultMaster, categories[round], questions[round * 10 + question], answers[round * 10 + question]);	
+				makeAnswer(ppt, defaultMaster, categories[round], questions[round * 10 + question], answers[round * 10 + question]);	
 			}
 		}
 		
@@ -68,7 +79,23 @@ public class SlideShowBuilder {
 
 	}
 
-	private static void makeSlide(XMLSlideShow ppt, XSLFSlideMaster master, String title, String question, String answer) {
+	private static void makeQuestion(XMLSlideShow ppt, XSLFSlideMaster master, String title, String question, String answer) {
+		XSLFSlideLayout blankSlide = master.getLayout(SlideLayout.BLANK);
+		XSLFSlide slide = ppt.createSlide(blankSlide);
+
+		XSLFTextShape header = slide.createTextBox();
+		header.setAnchor(new Rectangle2D.Double(16.988740, 17.797717, 685.011260, 50.892205));
+		header.setText(title).setFontSize(36.0d);
+		header.setHorizontalCentered(true);
+
+		XSLFTextShape question1 = slide.createTextBox();
+		question1.setAnchor(new Rectangle2D.Double(16.988740, 68.689921, 685.011260, 298.120866));
+		question1.setText(question).setFontSize(44.0);
+		question1.setHorizontalCentered(true);
+
+	
+}
+	private static void makeAnswer(XMLSlideShow ppt, XSLFSlideMaster master, String title, String question, String answer) {
 		XSLFSlideLayout blankSlide = master.getLayout(SlideLayout.BLANK);
 		XSLFSlide slide = ppt.createSlide(blankSlide);
 
@@ -87,7 +114,6 @@ public class SlideShowBuilder {
 		answer1.setText(answer).setFontSize(36.0d);
 		answer1.setHorizontalCentered(true);
 }
-
 	private void savePPTX(XMLSlideShow ppt, String filePath) {
 		File file = new File(filePath);
 	    FileOutputStream out;
