@@ -1,13 +1,19 @@
 package edu.maryville.isys320.TriviaNight;
 
+import java.util.Scanner;
+
 public class BuildTriviaNightPresentation {
 
 	public static void main(String[] args) {
 		try {
+			Scanner console = new Scanner(System.in);
+			String roundType = " Missouri ";
+			System.out.println("Would you like to use Missouri or Illinois style? ");
+			roundType = console.nextLine();
 			String fileName = "TriviaNight.pptx";
 			SlideShowBuilder builder = new SlideShowBuilder();
 			QuestionsManager qm = new QuestionsManager("data");
-
+			
 			String[] categories = qm.getCategories();
 			String[] questions = qm.getQuestions();
 			String[] answers = qm.getAnswers();
@@ -25,7 +31,7 @@ public class BuildTriviaNightPresentation {
 				System.exit(-1);
 			}
 
-			builder.buildSlideShow(categories, questions, answers, fileName);
+			builder.buildSlideShow(categories, questions, answers, fileName, roundType);
 			// builder.printSlideShowInfo("TriviaNight.pptx");
 		} catch (Exception ex) {
 			System.out.println("WRONG!!!");
@@ -33,3 +39,4 @@ public class BuildTriviaNightPresentation {
 	}
 
 }
+//need to gather user input for type of trivia night
